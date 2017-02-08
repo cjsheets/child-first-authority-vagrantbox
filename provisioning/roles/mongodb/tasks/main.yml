@@ -50,7 +50,11 @@
   template: src=mongod.conf.j2 dest=/etc/mongod.conf owner=root group=root mode=0644
   tags: mongodb
 
+- name: Create the mongodb systemd file
+  template: src=mongodb.service.j2 dest=/etc/systemd/system/mongodb.service owner=root group=root mode=0644
+  tags: mongodb
+
 - name: MongoDB | Run mongo daemon
   sudo: yes
-  service: name=mongod state=restarted
+  service: name=mongodb state=restarted
   tags: mongodb
