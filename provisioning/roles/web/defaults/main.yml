@@ -1,4 +1,4 @@
 nvm:
-  user: '{{ ansible_user_id }}'
+  user: 'vagrant'
   version: HEAD
   node_version: '6.9.5'

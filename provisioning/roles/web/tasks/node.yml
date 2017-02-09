@@ -6,13 +6,29 @@
   git: repo=https://github.com/creationix/nvm.git dest=~/.nvm version={{ nvm.version }}
   tags: nvm
 
+- name: Check checkout latest version
+  shell: cd ~/.nvm; git checkout $(git describe --abbrev=0 --tags --match "v[0-9]*" origin)
+  register: nvm_check_default
+  changed_when: False
+  ignore_errors: True
+  tags: nvm
+
 - name: Source nvm in ~/.profile
-  sudo: yes
-  sudo_user: "{{ nvm.user }}"
-  lineinfile: >
-    dest=~/.profile
-    line="source ~/.nvm/nvm.sh"
-    create=yes
+  blockinfile:
+    dest: ~/.profile
+    block: | 
+      export NVM_DIR="$HOME/.nvm"
+      [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
+    create: yes
+  tags: nvm
+
+- name: Source nvm in ~/.bashrc
+  blockinfile:
+    dest: ~/.bashrc
+    block: | 
+      export NVM_DIR="$HOME/.nvm"
+      [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
+    create: yes
   tags: nvm
 
 - name: Install {{ nvm.node_version }}
