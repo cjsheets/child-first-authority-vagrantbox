@@ -11,6 +11,7 @@
     - libkrb5-dev
     - libpng-dev
     - libfontconfig-dev
+    - libssl-dev
     - python-pip
   tags: packages
 
@@ -31,34 +32,6 @@
 - name: Register remote PATH File
   shell: "echo $PATH"
   register: nodejs_path_out
-
-- name: use node 12.7
-  sudo: no
-  command: /home/vagrant/n/bin/n 0.12.7
-  environment:
-    N_PREFIX: "/home/vagrant/n"
-    PATH: "/home/vagrant/n/bin:{{ nodejs_path_out.stdout }}"
-
-- name: Npm | Install npm
-  sudo: no
-  npm: name=npm global=yes executable=/home/vagrant/n/bin/npm state=latest
-  environment:
-    N_PREFIX: "/home/vagrant/n"
-    PATH: "/home/vagrant/n/bin:{{ nodejs_path_out.stdout }}"
-
-- name: Npm | Install npm packages
-  sudo: no
-  npm: name={{item}} global=yes executable=/home/vagrant/n/bin/npm
-  with_items:
-    - yo
-    - bower
-    - grunt-cli
-    - generator-angular-fullstack
-    - npm-check-updates
-  environment:
-    N_PREFIX: "/home/vagrant/n"
-    PATH: "/home/vagrant/n/bin:{{ nodejs_path_out.stdout }}"
-  tags: npm packages
 
 - name: Install heroku-toolbelt
   include: 'heroku.yml'
